@@ -19,7 +19,7 @@ Want to create fast, organized web projects with best practices and full control
   <summary>🚀 Screenshot / Preview</summary>
 
   <br>
-  <img width="1914" height="948" alt="Nucleify screenshot" src="https://github.com/user-attachments/assets/16143700-3ec9-408c-9ed6-c8109c42ecae" />
+  <img width="1914" height="948" alt="Nucleify screenshot" src="./img/preview.png" />
 
 </details>
 
