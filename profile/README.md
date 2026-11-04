@@ -1,86 +1,125 @@
-<div align="center"> 
-  <img width="75" src="https://nucleify.io/img/logo.svg" />
+<div align="center">
+  <img src="https://github.com/Nucleify/Nucleify/blob/prod/public/img/logo.svg" width="88" alt="Nucleify" />
+  <h1>Nucleify</h1>
+  <p><strong>The TypeScript IR Compiler & Framework Migration Engine</strong></p>
+  <p>Write state, validation, and domain logic once in clean TypeScript. Emit 100% human-readable, idiomatic code for Next.js, Nuxt, Astro, Svelte, or Solid.</p>
 
-  # Nucleify - Modular Full‑Stack Framework
-  <br>
-
-  [Polish](README_PL.md) | **English**
-
+  <p>
+    <a href="https://nucleify.io">Website</a> •
+    <a href="https://docs.nucleify.io">Documentation</a> •
+    <a href="https://ui.nucleify.io">nucleify-ui</a> •
+  </p>
 </div>
 
-<br>
+---
 
-**Nucleify** is a modern, modular full-stack framework (built with **Laravel + Vue/Nuxt**) designed to speed up building websites, CMSs, and web apps - without the pain of legacy CMS systems.  
-Want to create fast, organized web projects with best practices and full control over the code? **Nucleify is your tool.**
+Every 3 years, frontend ecosystems force a painful, costly rewrite: Vue 2 to Vue 3, SPAs to Next.js App Router, React to Svelte or Astro for performance. 
 
-<br>
+Manual rewrites freeze product roadmaps for 3–6 months and burn hundreds of thousands of dollars re-implementing existing forms, sessions, and state machines.
 
-<details>
-  <summary>🚀 Screenshot / Preview</summary>
+**Nucleify ends that loop:**
+- **Single Source of Truth (`shared_modules`)**: Domain logic, state machines, and data contracts live in pure TypeScript with zero framework wrappers.
+- **Intermediate Representation (IR) Compiler**: Parses AST and translates logic into idiomatic, native framework idioms (React hooks, Vue composables, Svelte runes).
+- **Zero Runtime Overhead**: No intermediate runtime libraries (`@nucleify/runtime` is not required in your production bundle).
+- **Zero Vendor Lock-In**: You own 100% of emitted source code. If you disconnect from Nucleify tomorrow, your project builds and deploys as a standard Next.js, Nuxt, Svelte, or Solid app.
 
-  <br>
-  <img width="1914" height="948" alt="Nucleify screenshot" src="./img/preview.png" />
+---
 
-</details>
+## Supported Emit Targets
 
-<br>
+| Framework | Target Flag | Generated Idioms |
+|---|---|---|
+| **Next.js** | `--target=next` | React 19 App Router, `'use client'`, hooks (`useState`, `useEffect`) |
+| **Nuxt** | `--target=nuxt` | Vue 3.5, `<script setup lang="ts">`, `ref()`, auto-imports |
+| **Svelte** | `--target=svelte` | Svelte 5 Runes (`$state`, `$derived`, `$props`) |
+| **Astro** | `--target=astro` | Static/SSR templates, zero-JS islands architecture |
+| **Solid.js** | `--target=solid` | Fine-grained reactivity, signals (`createSignal`) |
 
-## 🚀 Launch
+---
 
-📅 **Official launch:** February 28
+## Quick Start
 
-You can now:
-- 🖥️ Watch [live demo](https://nucleify.io)
-- 📚 Explore the [documentation](https://nucleify.io/docs/getting-started/introduction)
-- ⭐ Explore code and star the [repository](https://github.com/Nucleify/Nucleify)  
-- 📄 Explore [modules](https://github.com/Nucleify/Nucleify/tree/prod/modules)  
-- 💬 Create new [issue](https://github.com/Nucleify/Nucleify/issues)
+```bash
+# Clone repository
+git clone https://github.com/Nucleify/Nucleify.git
+cd Nucleify
 
-<br>
+# Setup environment and dependencies
+make run
 
-## 🔥 Why Nucleify?
+# Start canonical Nuxt dev server (http://localhost:7777)
+make web
 
-- Fully production-ready framework  
-- Ready for real-world projects  
-- Stack: **Laravel + Vue/Nuxt**  
-- Modular architecture with overrides  
-- Developer-friendly, eliminating common pain points of WordPress or PrestaShop  
+# Emit or run on another target:
+make web TARGET=next     # Converts and runs Next.js shell
+make web TARGET=svelte   # Converts and runs Svelte shell
+```
 
-<br>
+---
 
-## 🎯 Main Goals
+## Code Quality Comparison
 
-- Streamline website and CMS development  
-- Ensure modularity and clean architecture  
-- Help frontend, backend, and fullstack developers  
-- Provide a solid foundation for projects that grow with your product  
+### Source: Pure TypeScript (`src/modules/auth/user-session.ts`)
+```typescript
+import { state, handler } from '#nuc-compiler/runtime'
 
-<br>
+export const userSession = {
+  email: state(''),
+  isLoading: state(false),
+  login: handler(async (email: string) => {
+    // Domain login logic
+  })
+}
+```
 
-## 🧠 Features
+### Emitted Next.js (`components/UserSession.tsx`)
+```tsx
+'use client'
+import { useState } from 'react'
 
-**💡 Technologies**
+export function UserSession() {
+  const [email, setEmail] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
+  // 100% native React code. Zero Nucleify runtime packages.
+}
+```
 
-- Laravel – backend and module logic  
-- Vue / Nuxt – frontend, SSR, and optimizations  
-- Atomic Design + CSS Modules  
-- Storybook – UI component library  
+### Emitted Nuxt 3 (`components/UserSession.vue`)
+```vue
+<script setup lang="ts">
+const email = ref('')
+const isLoading = ref(false)
+// 100% native Vue composables.
+</script>
+```
 
-**⚙️ What’s already working**
+---
 
-- CMS with full admin panel  
-- Custom module system  
-- Override system – extend without touching the core  
-- Nuxt + SSR optimized for Core Web Vitals  
-- 2000+ backend tests (92% coverage)  
+## Architecture at a Glance
 
-<br>
+```txt
+nucleify/
+├── web/                    # Canonical Nuxt 4 web app
+├── admin/                  # Canonical Nuxt 4 admin panel
+├── docs/                   # Astro 5 documentation site
+├── compiler/               # Core IR AST compiler engine
+├── shared_modules/         # Feature modules (API, Auth, Theme, i18n, Stores)
+├── portable/nui/           # Design tokens & portable UI web components
+└── supabase/               # Migrations, seeders, and Postgres functions
+```
 
-## 🧰 For Whom?
+---
 
-- Backend developers  
-- Frontend and fullstack engineers  
-- Teams seeking scalable and organized architecture  
-- Projects where performance and CWV matter  
+## Commercial & Enterprise Migration
 
-<br>
+- **Reduce Migration Cost by 70%**: Turn 6-month manual rewrites into 2-3 weeks of automated IR compilation.
+- **Free Proof of Concept (PoC)**: Send us 3–5 representative components, and we’ll return idiomatic, production-ready emitted code in your target framework within 48 hours.
+- **Enterprise On-Premises & Code Escrow**: Run the compiler entirely air-gapped on your infrastructure with full legal escrow protection.
+
+Contact: [team@nucleify.io](mailto:team@nucleify.io) • Website: [nucleify.io](https://nucleify.io)
+
+---
+
+## License
+
+Core packages and modules are licensed under the MIT License. Enterprise compiler extensions and migration tooling are provided under the Nucleify Commercial License.
