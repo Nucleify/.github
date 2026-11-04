@@ -7,7 +7,7 @@
   <p>
     <a href="https://nucleify.io">Website</a> •
     <a href="https://docs.nucleify.io">Documentation</a> •
-    <a href="https://ui.nucleify.io">nucleify-ui</a> •
+    <a href="https://ui.nucleify.io">nucleify-ui</a>
   </p>
 </div>
 
